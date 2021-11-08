@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h6 class="display-6">See the distribution of your expenses!</h6>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div id="graph"> </div>
+    </div>
+</div>
+
+
+@section Scripts {
+   
+    <script type="text/javascript">
+                $(document).ready(function () {
+                    RenderPartialView();
+                });
+    </script>
+
+    <script type="text/javascript">
+   function RenderPartialView()
+    {
+        $.ajax({
+            url: '@Url.Action("ExpStructure", "Expenses")',
+            dataType: "html",
+            type: "GET",
+            contentType: 'application/html; charset=utf-8',
+            success: function (response) {
+                $('#graph').html(response);
+
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+    </script>
+}

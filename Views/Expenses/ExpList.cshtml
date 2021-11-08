@@ -1,0 +1,92 @@
+﻿@model IEnumerable<WebMVC.ViewModels.ExpensesVM>
+
+@{
+    ViewData["Title"] = "ExpList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+ 
+
+    <section class="content">
+        <p>
+            <a href="@Url.Action("CreateExp", "Expenses")" class="btn btn-primary btn-xs">Create</a>
+        </p>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <table id="example" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th hidden="hidden"></th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Cost)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td hidden="hidden">@item.Id</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Cost)
+                                    </td>
+                                    <td>
+                                      
+                                        <a asp-action="EditExp" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="DeleteExp" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <div id="graph"> </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        @section Scripts {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#example').DataTable({
+                        "searching": false,
+                        "lengthChange": false,
+                        "paginate": false,
+                        "info": false});
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    RenderPartialView();
+                });
+            </script>
+
+            <script type="text/javascript">
+   function RenderPartialView()
+    {
+        $.ajax({
+            url: '@Url.Action("ExpStructure", "Expenses")',
+            dataType: "html",
+            type: "GET",
+            contentType: 'application/html; charset=utf-8',
+            success: function (response) {
+                $('#graph').html(response);
+
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+            </script>
+        }

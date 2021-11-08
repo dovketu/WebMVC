@@ -1,0 +1,73 @@
+﻿
+<div class="card card-default card-outline card-dark rounded-0">
+    <div class="card-header">
+        <h6 class="card-title text-center">Expenses chart </h6>
+    </div>
+    <div class="card-body">
+        <div class="doughnut-canvas-container">
+            <canvas class="chartjs-render-monitor" id="ExpChart" style="height:340px; min-height:340px"></canvas>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+      $(document).ready(function () {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("ExpCal", "Expenses")',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (chData) {
+                var aData = chData;
+                var aLabels = aData[0];
+                var aDatasets1 = aData[1];
+                var dataT = {
+                    labels: aLabels,
+                    datasets: [{
+                        data: aDatasets1,
+                        backgroundColor: ['#6eba8c', '#0e8174', '#b9f2a1', '#005562', '#10c4b5', '#62BAAC', '#4B8078', '#005248', '#AEAC9A', '#00CAB1', '#959366', '#95B1B0', '#1B3D2F']
+                    }]
+                };
+                var ctx = document.getElementById('ExpChart').getContext('2d');
+                var chartas = new Chart(ctx, {
+                    type: 'pie',
+                    data: dataT,
+                    options: {
+
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        tooltips: {
+                            callbacks: {
+                                label: function (tooltipItem, data) {
+                                    return data.labels[tooltipItem.index] + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] + ' EUR';
+                                }
+                            }
+                        },
+                        layout: {
+                            padding: 60
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            align: 'start',
+
+                            labels: {
+                                usePointStyle: true,
+                                fontSize: 12,
+                            },
+                        },
+                        animation: {
+                            animateScale: true,
+                            animateRotate: true
+                        },
+                    }
+                });
+            }
+        }
+       );
+    });
+</script>
+
+
+
+
